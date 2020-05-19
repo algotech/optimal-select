@@ -7,12 +7,12 @@
 // environment (default mode: development)
 global.__DEVELOPMENT__ = !(process.env.NODE_ENV === 'production' || process.argv.length > 2)
 
-require('babel-register')
+require('@babel/register')
 
 var path = require('path')
 
-var SourceLibrary = require('./tasks/src-lib')
-var SourceDistribution = require('./tasks/src-dist')
+var SourceLibrary = require('./tasks/src-lib').default;
+var SourceDistribution = require('./tasks/src-dist').default;
 
 var env = {
   SRC: path.resolve(__dirname, '../src'),
