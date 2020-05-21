@@ -96,30 +96,22 @@ export default (env) => {
         new webpack.LoaderOptionsPlugin({
           minimize: true
         }),
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-          sourceMap: true,
-          compress: {
-            unused: true,
-            dead_code: true,
-            warnings: false,
-            screw_ie8: true
-          },
-          output: {
-            comments: false
-          }
-        })
-      ]
+      ],
+      optimization: {
+        minimize: true,
+      }
     }, CommonConfig)
 
     return webpack(ProductionDebugConfig).run((error, stats) => {
       if (error) {
         return rejec(error)
       }
+
       return webpack(ProductionMinifiedConfig).run((error, stats) => {
         if (error) {
           return reject(error)
         }
+
         return resolve()
       })
     })
