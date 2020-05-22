@@ -1,4 +1,4 @@
-import { select as getQuerySelector, getSingleSelector } from '../../index';
+import getQuerySelector, { getSingleSelector } from '../../select';
 
 import SelectorConfig from '../selector-configuration';
 import select from './select-wrapper';
