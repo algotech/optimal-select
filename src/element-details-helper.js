@@ -52,7 +52,7 @@ var constructDirectChildrenArray = function (element) {
   return childrenArray;
 };
 
-var constructElementDetail = function (selector, testLineItemId) {
+var constructElementDetails = function (selector, testLineItemId) {
   var domElement = document.querySelector(selector);
 
   if (!domElement || !window.trudonGlobals) {
@@ -116,7 +116,7 @@ var getPreviousSiblingsNumber = function (element) {
 };
 
 var addToGlobalVariable = function (testLineItemDetails) {
-  var elementDetails = constructElementDetail(testLineItemDetails.selector, testLineItemDetails.testLineItemId);
+  var elementDetails = constructElementDetails(testLineItemDetails.selector, testLineItemDetails.testLineItemId);
   if (window.trudonGlobals) {
     window.trudonGlobals.elementDetails.push(elementDetails);
   }
@@ -132,5 +132,5 @@ var attachElementDetailsToGlobal = () => {
 
 export default {
   attachElementDetailsToGlobal,
-  constructElementDetail,
+  constructElementDetails,
 };
