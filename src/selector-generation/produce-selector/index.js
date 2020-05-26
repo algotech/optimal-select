@@ -65,6 +65,7 @@ function produceSelectorFn($element, $customPageDocument, config) {
     exceptions: Object.assign(
       {},
       { forbiddenClassSubstrings: config.getForbiddenClassSubstrings() },
+      { forbiddenIdSubstrings: config.getForbiddenIdSubstrings() },
       { forbiddenAttributeSubstrings: config.getForbiddenAttributeSubstrings() }
     )
   };
