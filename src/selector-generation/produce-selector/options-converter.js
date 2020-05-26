@@ -30,6 +30,13 @@ function ignoreIdFn(selectorConfig, a, idName) {
     if (isSelectorRandomlyGenerated(idName) && selectorConfig.isExcludingRandomSelectors()) {
       return true;
     }
+    const forbiddenSubstrings = selectorConfig.getForbiddenIdSubstrings();
+
+    for (let i = 0; i < forbiddenSubstrings.length; i++) {
+      if (idName.includes(forbiddenSubstrings[i])) {
+        return true; // ignore id name with forbidden substring
+      }
+    }
 
     return false; // allow all ids that reached this point
   }

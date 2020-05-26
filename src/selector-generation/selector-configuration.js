@@ -52,6 +52,11 @@ class SelectorConfig {
       this.composition.exceptions.forbiddenClassSubstrings || [];
   }
 
+  getForbiddenIdSubstrings() {
+    return this.composition.exceptions &&
+      this.composition.exceptions.forbiddenIdSubstrings || [];
+  }
+
   getForbiddenAttributeSubstrings() {
     return this.composition.exceptions &&
       this.composition.exceptions.forbiddenAttributeSubstrings || [];
@@ -63,6 +68,15 @@ class SelectorConfig {
 
     if (index >= 0) {
       this.composition.exceptions.forbiddenClassSubstrings.splice(index, 1);
+    }
+  }
+
+  deleteForbiddenIdSubstring(substring) {
+    let forbiddenIdSubstrings = this.getForbiddenIdSubstrings();
+    let index = forbiddenIdSubstrings.indexOf(substring);
+
+    if (index >= 0) {
+      this.composition.exceptions.forbiddenIdSubstrings.splice(index, 1);
     }
   }
 
@@ -81,6 +95,14 @@ class SelectorConfig {
     forbiddenClassSubstrings.push(substring);
     this.composition.exceptions.forbiddenClassSubstrings =
       forbiddenClassSubstrings;
+  }
+
+  insertForbiddenIdSubstring(substring) {
+    let forbiddenIdSubstrings = this.getForbiddenIdSubstrings();
+
+    forbiddenIdSubstrings.push(substring);
+    this.composition.exceptions.forbiddenIdSubstrings =
+      forbiddenIdSubstrings;
   }
 
   insertForbiddenAttributeSubstring(substring) {
