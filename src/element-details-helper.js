@@ -52,10 +52,10 @@ var constructDirectChildrenArray = function (element) {
   return childrenArray;
 };
 
-var constructElementDetails = function (selector, testLineItemId) {
+var constructElementDetails = function (selector, testLineItemId, requestedByExtension = false) {
   var domElement = document.querySelector(selector);
 
-  if (!domElement || !window.trudonGlobals) {
+  if (!domElement || (!window.trudonGlobals && !requestedByExtension)) {
     return null;
   }
 
