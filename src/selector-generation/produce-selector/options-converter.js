@@ -15,6 +15,9 @@ export const configToOptions = selectorConfig => ({
     class: ignoreClassFn.bind(this, selectorConfig),
     tag: ignoreTagFn.bind(this, selectorConfig),
     attribute: ignoreAttributeFn.bind(this, selectorConfig),
+  },
+  exclude: {
+    class: excludeClassFn.bind(this, selectorConfig),
   }
 });
 
@@ -124,6 +127,24 @@ function ignoreAttributeFn(
   }
 
   return true; // ignore all attributes
+}
+
+function excludeClassFn(selectorConfig, className) {
+    // if (className.length > 30) {
+    //   return true; // ignore long classes
+    // }
+  if (isSelectorRandomlyGenerated(className) && selectorConfig.isExcludingRandomSelectors()) {
+    return true;
+  }
+  const forbiddenSubstrings = selectorConfig.getForbiddenClassSubstrings();
+
+  for (let i = 0; i < forbiddenSubstrings.length; i++) {
+    if (className.includes(forbiddenSubstrings[i])) {
+      return true; // ignore class name with forbidden substring
+    }
+  }
+
+  return false; // don't exclude classes who reached until here
 }
 
 export default {
