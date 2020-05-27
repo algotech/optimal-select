@@ -171,7 +171,7 @@ function findAttributesPattern (priority, element, ignore, exclude) {
         })));
         let className = excludeClassNameParts(attributeValue, exclude.className);
         className = className.trim().replace(/\s+/g, '.');
-        pattern = `.${className}`;
+        pattern = className.length ? `.${className}` : null;
         console.log('after exclusion', pattern);
       }
     }
