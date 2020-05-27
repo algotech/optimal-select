@@ -189,11 +189,11 @@ function excludeClassNameParts(className, shouldExclude) {
   const classNames = className.split(' ');
 
   return classNames.filter(name => {
-    if (!className.length) {
+    if (!name.length) {
       return true;
     }
 
-    return !shouldExclude(className);
+    return !shouldExclude(name);
   }).join(' ');
 }
 
