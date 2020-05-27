@@ -15,6 +15,9 @@ export const configToOptions = selectorConfig => ({
     class: ignoreClassFn.bind(this, selectorConfig),
     tag: ignoreTagFn.bind(this, selectorConfig),
     attribute: ignoreAttributeFn.bind(this, selectorConfig),
+  },
+  exclude: {
+    className: excludeClassFn.bind(this, selectorConfig),
   }
 });
 
@@ -53,21 +56,7 @@ function ignoreIdFn(selectorConfig, a, idName) {
  */
 function ignoreClassFn(selectorConfig, a, className) {
   if (className && selectorConfig.isAllowClasses()) {
-    if (className.length > 30) {
-      return true; // ignore long classes
-    }
-    if (isSelectorRandomlyGenerated(className) && selectorConfig.isExcludingRandomSelectors()) {
-      return true;
-    }
-    const forbiddenSubstrings = selectorConfig.getForbiddenClassSubstrings();
-
-    for (let i = 0; i < forbiddenSubstrings.length; i++) {
-      if (className.includes(forbiddenSubstrings[i])) {
-        return true; // ignore class name with forbidden substring
-      }
-    }
-
-    return false; // don't ignore classes who reached until here
+    return false; // allow all classes
   }
 
   return true; // ignore all classes
@@ -124,6 +113,32 @@ function ignoreAttributeFn(
   }
 
   return true; // ignore all attributes
+}
+
+/**
+ * Decides if a className should be excluded
+ * @param {SelectorConfig} selectorConfig
+ * @param {string} className
+ * @return {boolean}
+ */
+function excludeClassFn(selectorConfig, className) {
+  if (className.length > 30) {
+    return true; // ignore long classes
+  }
+
+  if (isSelectorRandomlyGenerated(className) && selectorConfig.isExcludingRandomSelectors()) {
+    return true;
+  }
+
+  const forbiddenSubstrings = selectorConfig.getForbiddenClassSubstrings();
+
+  for (let i = 0; i < forbiddenSubstrings.length; i++) {
+    if (className.includes(forbiddenSubstrings[i])) {
+      return true; // ignore class name with forbidden substring
+    }
+  }
+
+  return false; // don't exclude classes who reached until here
 }
 
 export default {
