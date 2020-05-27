@@ -165,14 +165,9 @@ function findAttributesPattern (priority, element, ignore, exclude) {
       }
 
       if (attributeName === 'class') {
-        console.log('exclude?', attributeValue.split(' ').map(c => ({
-          ex: exclude.className(c),
-          c,
-        })));
         let classNameAfterExclusion = excludeClassNameParts(attributeValue, exclude.className);
         classNameAfterExclusion = classNameAfterExclusion.trim().replace(/\s+/g, '.');
         pattern = classNameAfterExclusion.length ? `.${classNameAfterExclusion}` : null;
-        console.log('after exclusion', pattern);
       }
     }
 
@@ -181,6 +176,9 @@ function findAttributesPattern (priority, element, ignore, exclude) {
   return null
 }
 /**
+* Takes parts that should be excluded out of the classname based on shouldExclude call result.
+* A "part" is a substring of the class attribute value delimited by spaces.
+*
 * @param  {string}         className      A part of a class attribute value
 * @param  {Function}       shouldExclude  Decides if name is accepted or not
 * @return {string}                        className with unwanted parts(names) excluded

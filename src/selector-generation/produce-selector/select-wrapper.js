@@ -42,7 +42,7 @@ function select(
     config
   };
   let options = configToOptions(config);
-  console.log('config -> options', config, options);
+
   try {
     // use custom document root if specified
     if (customPageDocument) {
