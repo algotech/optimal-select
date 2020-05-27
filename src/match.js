@@ -32,7 +32,11 @@ export default function match (node, options) {
     ignore = {},
     exclude = {},
   } = options
-  console.log('match op', options, exclude);
+  console.log(
+    'match op',
+    options,
+    exclude.className && exclude.className('jss251 markdown-body')
+  );
   const path = []
   var element = node
   var length = path.length
