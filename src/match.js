@@ -76,11 +76,11 @@ export default function match (node, options) {
   while (element !== root) {
     if (skipChecks(element) !== true) {
       // ~ global
-      if (checkAttributes(priority, element, ignore, path, root)) break
+      if (checkAttributes(priority, element, ignore, exclude, path, root)) break
       if (checkTag(element, ignore, path, root)) break
 
       // ~ local
-      checkAttributes(priority, element, ignore, path)
+      checkAttributes(priority, element, ignore, exclude, path)
       if (path.length === length) {
         checkTag(element, ignore, path)
       }
@@ -109,12 +109,13 @@ export default function match (node, options) {
  * @param  {Array.<string>} priority - [description]
  * @param  {HTMLElement}    element  - [description]
  * @param  {Object}         ignore   - [description]
+ * @param  {Object}         exclude  - Exclude functions for parts of attributes
  * @param  {Array.<string>} path     - [description]
  * @param  {HTMLElement}    parent   - [description]
  * @return {boolean}                 - [description]
  */
-function checkAttributes (priority, element, ignore, path, parent = element.parentNode) {
-  const pattern = findAttributesPattern(priority, element, ignore)
+function checkAttributes (priority, element, ignore, exclude, path, parent = element.parentNode) {
+  const pattern = findAttributesPattern(priority, element, ignore, exclude)
   if (pattern) {
     const matches = parent.querySelectorAll(pattern)
     if (matches.length === 1) {
@@ -131,9 +132,10 @@ function checkAttributes (priority, element, ignore, path, parent = element.pare
  * @param  {Array.<string>} priority - [description]
  * @param  {HTMLElement}    element  - [description]
  * @param  {Object}         ignore   - [description]
+ * @param  {Object}         exclude  - Exclude functions for parts of attributes
  * @return {string?}                 - [description]
  */
-function findAttributesPattern (priority, element, ignore) {
+function findAttributesPattern (priority, element, ignore, exclude) {
   const attributes = element.attributes
   const sortedKeys = Object.keys(attributes).sort((curr, next) => {
     const currPos = priority.indexOf(attributes[curr].name)
@@ -167,6 +169,10 @@ function findAttributesPattern (priority, element, ignore) {
       }
 
       if (attributeName === 'class') {
+        console.log('exclude?', attributeValue.split(' ').map(c => ({
+          ex: exclude.className(c),
+          c,
+        })));
         const className = attributeValue.trim().replace(/\s+/g, '.')
         pattern = `.${className}`
       }
@@ -252,8 +258,8 @@ function checkChilds (priority, element, ignore, path) {
  * @param  {Object}         ignore   - [description]
  * @return {string}                  - [description]
  */
-function findPattern (priority, element, ignore) {
-  var pattern = findAttributesPattern(priority, element, ignore)
+function findPattern (priority, element, ignore, exclude = {}) {
+  var pattern = findAttributesPattern(priority, element, ignore, exclude)
   if (!pattern) {
     pattern = findTagPattern(element, ignore)
   }
