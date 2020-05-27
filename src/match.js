@@ -32,11 +32,7 @@ export default function match (node, options) {
     ignore = {},
     exclude = {},
   } = options
-  console.log(
-    'match op',
-    options,
-    exclude.className && exclude.className('jss251 markdown-body')
-  );
+
   const path = []
   var element = node
   var length = path.length
@@ -173,14 +169,32 @@ function findAttributesPattern (priority, element, ignore, exclude) {
           ex: exclude.className(c),
           c,
         })));
-        const className = attributeValue.trim().replace(/\s+/g, '.')
-        pattern = `.${className}`
+        let className = excludeClassNameParts(attributeValue, exclude.className);
+        className = className.trim().replace(/\s+/g, '.');
+        pattern = `.${className}`;
+        console.log('after exclusion', pattern);
       }
     }
 
     return pattern
   }
   return null
+}
+/**
+* @param  {string}         className      A part of a class attribute value
+* @param  {Function}       shouldExclude  Decides if name is accepted or not
+* @return {string}                        className with unwanted parts(names) excluded
+*/
+function excludeClassNameParts(className, shouldExclude) {
+  const classNames = className.split(' ');
+
+  return classNames.filter(name => {
+    if (!className.length) {
+      return true;
+    }
+
+    return !shouldExclude(className);
+  }).join(' ');
 }
 
 /**
