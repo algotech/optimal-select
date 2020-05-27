@@ -17,7 +17,7 @@ export const configToOptions = selectorConfig => ({
     attribute: ignoreAttributeFn.bind(this, selectorConfig),
   },
   exclude: {
-    class: excludeClassFn.bind(this, selectorConfig),
+    classname: 'no func',
   }
 });
 
