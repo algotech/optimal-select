@@ -83,7 +83,7 @@ export default function match (node, options) {
 
       // define only one part each iteration
       if (path.length === length) {
-        checkChilds(priority, element, ignore, path)
+        checkChilds(priority, element, ignore, exclude, path)
       }
     }
 
@@ -92,7 +92,7 @@ export default function match (node, options) {
   }
 
   if (element === root) {
-    const pattern = findPattern(priority, element, ignore)
+    const pattern = findPattern(priority, element, ignore, exclude)
     path.unshift(pattern)
   }
 
@@ -169,9 +169,9 @@ function findAttributesPattern (priority, element, ignore, exclude) {
           ex: exclude.className(c),
           c,
         })));
-        let className = excludeClassNameParts(attributeValue, exclude.className);
-        className = className.trim().replace(/\s+/g, '.');
-        pattern = className.length ? `.${className}` : null;
+        let classNameAfterExclusion = excludeClassNameParts(attributeValue, exclude.className);
+        classNameAfterExclusion = classNameAfterExclusion.trim().replace(/\s+/g, '.');
+        pattern = classNameAfterExclusion.length ? `.${classNameAfterExclusion}` : null;
         console.log('after exclusion', pattern);
       }
     }
@@ -244,13 +244,13 @@ function findTagPattern (element, ignore) {
  * @param  {Array.<string>} path     - [description]
  * @return {boolean}                 - [description]
  */
-function checkChilds (priority, element, ignore, path) {
+function checkChilds (priority, element, ignore, exclude, path) {
   const parent = element.parentNode
   const children = parent.childTags || parent.children
   for (var i = 0, l = children.length; i < l; i++) {
     const child = children[i]
     if (child === element) {
-      const childPattern = findPattern(priority, child, ignore)
+      const childPattern = findPattern(priority, child, ignore, exclude)
       if (!childPattern) {
         return console.warn(`
           Element couldn\'t be matched through strict ignore pattern!
@@ -272,7 +272,7 @@ function checkChilds (priority, element, ignore, path) {
  * @param  {Object}         ignore   - [description]
  * @return {string}                  - [description]
  */
-function findPattern (priority, element, ignore, exclude = {}) {
+function findPattern (priority, element, ignore, exclude) {
   var pattern = findAttributesPattern(priority, element, ignore, exclude)
   if (!pattern) {
     pattern = findTagPattern(element, ignore)
