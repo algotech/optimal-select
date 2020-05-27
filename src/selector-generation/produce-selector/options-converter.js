@@ -17,7 +17,7 @@ export const configToOptions = selectorConfig => ({
     attribute: ignoreAttributeFn.bind(this, selectorConfig),
   },
   exclude: {
-    classname: 'no func',
+    className: excludeClassFn.bind(this, selectorConfig),
   }
 });
 
@@ -129,10 +129,13 @@ function ignoreAttributeFn(
   return true; // ignore all attributes
 }
 
+/**
+ * Decides if a className should be excluded
+ * @param {SelectorConfig} selectorConfig
+ * @param {string} className
+ * @return {boolean}
+ */
 function excludeClassFn(selectorConfig, className) {
-    // if (className.length > 30) {
-    //   return true; // ignore long classes
-    // }
   if (isSelectorRandomlyGenerated(className) && selectorConfig.isExcludingRandomSelectors()) {
     return true;
   }
