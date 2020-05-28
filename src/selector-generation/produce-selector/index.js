@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import getQuerySelector, { getSingleSelector } from '../../select';
 
 import SelectorConfig from '../selector-configuration';
@@ -109,6 +110,20 @@ function produceSelectorFnWrapper($element, $customPageDocument, config) {
   }
 
   return selector;
+}
+
+/**
+* Produces a selector without needing jquery element as param or
+* an instance of SelectorConfig(useful for algotech-testing-runner)
+*
+* @param {HTMLElement}      element
+* @param {Object}           config
+* @return {string}
+*/
+export function getSelector(element, config) {
+  const selectorConfig = new SelectorConfig('Global Selector Config', config);
+
+  return produceSelectorFnWrapper($(element), null, selectorConfig);
 }
 
 export const produceSelector = produceSelectorFnWrapper;
