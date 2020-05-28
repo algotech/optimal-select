@@ -118,7 +118,8 @@ function produceSelectorFnWrapper($element, $customPageDocument, config) {
 *
 * @param {HTMLElement}      element
 * @param {Object}           config
-* @return {string}
+* @return {Object}                  The generated selector string can be found by the .value
+*                                   attribute of this result object.
 */
 export function getSelector(element, config) {
   const selectorConfig = new SelectorConfig('Global Selector Config', config);
