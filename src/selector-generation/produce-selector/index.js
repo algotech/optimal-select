@@ -124,7 +124,7 @@ function produceSelectorFnWrapper($element, $customPageDocument, config) {
 export function getSelector(element, config) {
   const selectorConfig = new SelectorConfig('Global Selector Config', config);
 
-  return produceSelectorFnWrapper($(element), null, selectorConfig);
+  return produceSelectorFnWrapper($(element), window.document, selectorConfig);
 }
 
 export const produceSelector = produceSelectorFnWrapper;
