@@ -125,9 +125,12 @@ var attachElementDetailsToGlobal = (returnConstructElementDetails = false) => {
     return elementDetails;
   };
 
+  // we need constructElementDetails without other code to be exported for the extension part
+  // but we need constructElementDetails in the browser execute too, that's why this happens.
   if (returnConstructElementDetails) {
     return constructElementDetails;
   }
+
   if (window.trudonGlobals) {
     return addToGlobalVariable(window.trudonGlobals.element);
   }
