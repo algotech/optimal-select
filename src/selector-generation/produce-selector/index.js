@@ -12,21 +12,22 @@ const defaultSelectorConfig = new SelectorConfig(
 /**
  * Produces the selector and uses fallbacks in case the current config
  * is too restrictive for the current element
- * @param {JQuery} $element
+ * @param {JQuery} $element  {Jquery} or {Element} if isCalledByRunner is true
  * @param {Object} $customPageDocument
  * @param {SelectorConfig} config
+ * @param {Boolean} isCalledByRunner
  * @return {Object}
  */
-function produceSelectorFn($element, $customPageDocument, config) {
+function produceSelectorFn($element, $customPageDocument, config, isCalledByRunner = false) {
   // try with the specified config and default strategy
-  let sel1 = select($element, $customPageDocument, config, getQuerySelector);
+  let sel1 = select($element, $customPageDocument, config, getQuerySelector, isCalledByRunner);
 
   if (!sel1.hasError) {
     return sel1;
   }
 
   // try with the fallback config and default strategy
-  let sel2 = select($element, $customPageDocument, null, getQuerySelector);
+  let sel2 = select($element, $customPageDocument, null, getQuerySelector, isCalledByRunner);
 
   if (!defaultSelectorConfig.isIncludedInConfig(config)) {
     addWarningMessage(sel2, WARNINGS.FELL_TO_DEFAULT_CONFIG);
@@ -37,7 +38,7 @@ function produceSelectorFn($element, $customPageDocument, config) {
   }
 
   // try with the specified config and the fallback strategy
-  let sel3 = select($element, $customPageDocument, config, getSingleSelector);
+  let sel3 = select($element, $customPageDocument, config, getSingleSelector, isCalledByRunner);
 
   addWarningMessage(sel3, WARNINGS.FELL_TO_DEFAULT_STRATEGY);
 
@@ -46,7 +47,7 @@ function produceSelectorFn($element, $customPageDocument, config) {
   }
 
   // try with the fallback config and the fallback strategy
-  let sel4 = select($element, $customPageDocument, null, getSingleSelector);
+  let sel4 = select($element, $customPageDocument, null, getSingleSelector, isCalledByRunner);
 
   if (!defaultSelectorConfig.isIncludedInConfig(config)) {
     addWarningMessage(sel4, WARNINGS.FELL_TO_DEFAULT_CONFIG);
@@ -72,7 +73,7 @@ function produceSelectorFn($element, $customPageDocument, config) {
   };
   let configTagsOnly = new SelectorConfig(config.name, tagsOnlyComposition);
   let sel5 =
-    select($element, $customPageDocument, configTagsOnly, getQuerySelector);
+    select($element, $customPageDocument, configTagsOnly, getQuerySelector, isCalledByRunner);
 
   if (!configTagsOnly.isIncludedInConfig(config)) {
     addWarningMessage(sel5, WARNINGS.FELL_TO_DEFAULT_CONFIG);
@@ -88,25 +89,25 @@ function produceSelectorFn($element, $customPageDocument, config) {
 }
 
 function logAllInvalidSelectorsError(sel1, sel2, sel3, sel4, sel5) {
-  console.error('All produce selector attempts failed. The selectors are:');
-  console.error('userConfig + defaultStrategy', sel1);
-  console.error('fallbackConfig + defaultStrategy', sel2);
-  console.error('userConfig + fallbackStrategy', sel3);
-  console.error('fallbackConfig + fallbackStrategy', sel4);
-  console.error('tagsOnlyComposition + defaultStrategy', sel5);
+  console.error('[optimal-select-log] All produce selector attempts failed. The selectors are:');
+  console.error('[optimal-select-log] userConfig + defaultStrategy', sel1);
+  console.error('[optimal-select-log] fallbackConfig + defaultStrategy', sel2);
+  console.error('[optimal-select-log] userConfig + fallbackStrategy', sel3);
+  console.error('[optimal-select-log] fallbackConfig + fallbackStrategy', sel4);
+  console.error('[optimal-select-log] tagsOnlyComposition + defaultStrategy', sel5);
 }
 
-function produceSelectorFnWrapper($element, $customPageDocument, config) {
-  let selector = produceSelectorFn($element, $customPageDocument, config);
+function produceSelectorFnWrapper($element, $customPageDocument, config, isCalledByRunner) {
+  let selector = produceSelectorFn($element, $customPageDocument, config, isCalledByRunner);
 
   if (selector == null) {
-    return console.error('Selector is null!');
+    return console.error('[optimal-select-log] Selector is null!');
   }
   if (selector.hasError) {
-    console.error('Selector with errors: ', selector.errors);
+    console.error('[optimal-select-log] Selector with errors: ', selector.errors);
   }
   if (selector.hasWarning) {
-    console.warn('Selector with warnings: ', selector.warnings);
+    console.warn('[optimal-select-log] Selector with warnings: ', selector.warnings);
   }
 
   return selector;
@@ -124,7 +125,7 @@ function produceSelectorFnWrapper($element, $customPageDocument, config) {
 export function getSelector(element, config) {
   const selectorConfig = new SelectorConfig('Global Selector Config', config);
 
-  return produceSelectorFnWrapper($(element), window.document, selectorConfig);
+  return produceSelectorFnWrapper(element, window.document, selectorConfig, true);
 }
 
 export const produceSelector = produceSelectorFnWrapper;

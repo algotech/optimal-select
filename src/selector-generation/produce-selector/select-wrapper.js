@@ -16,17 +16,19 @@ let defaultSelectorConfig = new SelectorConfiguration(
 
 /**
  * Creates a selector for the provided element with the specifiec config
- * @param {JQuery} $element The element to create a selector for
+ * @param {JQuery} $element The element to create a selector for or {Element} if isCalledByRunner
  * @param {Object} [customPageDocument]
  * @param {SelectorConfig} [config]
  * @param {Function} [selectStrategy]
+ * @param {Boolean} [isCalledByRunner]
  * @return {Object}
  */
 function select(
   $element,
   customPageDocument,
   config,
-  selectStrategy
+  selectStrategy,
+  isCalledByRunner
 ) {
   config = config || defaultSelectorConfig;
   selectStrategy = selectStrategy || getSingleSelector;
@@ -49,13 +51,17 @@ function select(
       options.root = customPageDocument;
     }
     // produce the selector
-    let untestedSelector = selectStrategy($element[0], options);
+    let untestedSelector = isCalledByRunner ?
+      selectStrategy($element, options) :
+      selectStrategy($element[0], options);
     // test the selector
-    let isValid = $(options.root).find(untestedSelector).is($element);
+    let isValid = isCalledByRunner ?
+      options.root.querySelector(untestedSelector) === $element :
+      $(options.root).find(untestedSelector).is($element);
 
     if (isValid) {
       const shorterSelector = shortenSelectorByShifting(
-        untestedSelector, options.root, $element
+        untestedSelector, options.root, $element, isCalledByRunner
       );
 
       selector.value = shorterSelector || untestedSelector;
