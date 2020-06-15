@@ -3,15 +3,15 @@
 * @param {String} initialSelector The generated selector to be improved
 * @param {Object} root            Document root where to search for element
 * @param {JQuery} $element        The element to find a shorter selector for
+* @param {Boolean} [isCalledByRunner]
 */
-export function shortenSelectorByShifting(initialSelector, root, $element) {
+export function shortenSelectorByShifting(initialSelector, root, $element, isCalledByRunner) {
   let shorterSelector = initialSelector.split(' ');
   let lastShifted = '';
 
   while (
     isSelectorValid(shorterSelector.join(' ')) &&
-    $(root).find(shorterSelector.join(' ')).is($element) &&
-    $(root).find(shorterSelector.join(' ')).length == 1
+    isSelectorUnique(root, shorterSelector, $element, isCalledByRunner)
   ) {
     lastShifted = shorterSelector.shift();
     if (['>', '+', '~'].includes(shorterSelector[0])) {
@@ -24,6 +24,22 @@ export function shortenSelectorByShifting(initialSelector, root, $element) {
     improvedSelector :
     null;
 }
+/**
+ * Checks if the provided selector matches only the desired element
+ * @param {Object}  root         Document root where to search for element
+ * @param {String}  selector     The generated selector to be improved
+ * @param {JQuery}  $element     The element to check with the selector
+ * @param {Boolean} [isCalledByRunner]
+ */
+const isSelectorUnique = (root, selector, $element, isCalledByRunner) => (
+  isCalledByRunner ? (
+    root.querySelector(selector.join(' ')) === $element &&
+    root.querySelectorAll(selector.join(' ')).length === 1
+  ) : (
+    $(root).find(selector.join(' ')).is($element) &&
+    $(root).find(selector.join(' ')).length == 1
+  )
+);
 
 /**
 * Checks if the selector is syntactically valid
