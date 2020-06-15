@@ -26,11 +26,11 @@ export function shortenSelectorByShifting(initialSelector, root, $element, isCal
 
 const isSelectorUnique = (root, selector, $element, isCalledByRunner) => (
   isCalledByRunner ? (
-    root.querySelector(shorterSelector.join(' ')) === $element &&
-    root.querySelectorAll(shorterSelector.join(' ')).length === 1
+    root.querySelector(selector.join(' ')) === $element &&
+    root.querySelectorAll(selector.join(' ')).length === 1
   ) : (
-    $(root).find(shorterSelector.join(' ')).is($element) &&
-    $(root).find(shorterSelector.join(' ')).length == 1
+    $(root).find(selector.join(' ')).is($element) &&
+    $(root).find(selector.join(' ')).length == 1
   )
 );
 

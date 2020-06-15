@@ -18,7 +18,7 @@ const defaultSelectorConfig = new SelectorConfig(
  * @param {Boolean} isCalledByRunner
  * @return {Object}
  */
-function produceSelectorFn($element, $customPageDocument, config, isCalledByRunner = false) {
+function produceSelectorFn($element, $customPageDocument, config, isCalledByRunner) {
   // try with the specified config and default strategy
   let sel1 = select($element, $customPageDocument, config, getQuerySelector, isCalledByRunner);
 
@@ -97,7 +97,7 @@ function logAllInvalidSelectorsError(sel1, sel2, sel3, sel4, sel5) {
   console.error('[optimal-select-log] tagsOnlyComposition + defaultStrategy', sel5);
 }
 
-function produceSelectorFnWrapper($element, $customPageDocument, config, isCalledByRunner) {
+function produceSelectorFnWrapper($element, $customPageDocument, config, isCalledByRunner = false) {
   let selector = produceSelectorFn($element, $customPageDocument, config, isCalledByRunner);
 
   if (selector == null) {

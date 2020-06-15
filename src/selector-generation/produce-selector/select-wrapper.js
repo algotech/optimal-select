@@ -50,6 +50,7 @@ function select(
     if (customPageDocument) {
       options.root = customPageDocument;
     }
+    console.log('root', options.root, 'elem', $element);
     // produce the selector
     let untestedSelector = isCalledByRunner ?
       selectStrategy($element, options) :
@@ -59,11 +60,12 @@ function select(
       options.root.querySelector(untestedSelector) === $element :
       $(options.root).find(untestedSelector).is($element);
 
+    console.log('isValid', isValid);
     if (isValid) {
       const shorterSelector = shortenSelectorByShifting(
         untestedSelector, options.root, $element, isCalledByRunner
       );
-
+      console.log('shorterSel', shorterSelector, 'unt', untestedSelector);
       selector.value = shorterSelector || untestedSelector;
     } else {
       addErrorMessage(selector, ERRORS.VALIDATION_FAILED, {
