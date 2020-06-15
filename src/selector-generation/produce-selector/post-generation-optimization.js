@@ -3,6 +3,7 @@
 * @param {String} initialSelector The generated selector to be improved
 * @param {Object} root            Document root where to search for element
 * @param {JQuery} $element        The element to find a shorter selector for
+* @param {Boolean} [isCalledByRunner]
 */
 export function shortenSelectorByShifting(initialSelector, root, $element, isCalledByRunner) {
   let shorterSelector = initialSelector.split(' ');
@@ -23,7 +24,13 @@ export function shortenSelectorByShifting(initialSelector, root, $element, isCal
     improvedSelector :
     null;
 }
-
+/**
+ * Checks if the provided selector matches only the desired element
+ * @param {Object}  root         Document root where to search for element
+ * @param {String}  selector     The generated selector to be improved
+ * @param {JQuery}  $element     The element to check with the selector
+ * @param {Boolean} [isCalledByRunner]
+ */
 const isSelectorUnique = (root, selector, $element, isCalledByRunner) => (
   isCalledByRunner ? (
     root.querySelector(selector.join(' ')) === $element &&

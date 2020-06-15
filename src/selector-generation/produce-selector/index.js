@@ -15,7 +15,7 @@ const defaultSelectorConfig = new SelectorConfig(
  * @param {JQuery} $element  {Jquery} or {Element} if isCalledByRunner is true
  * @param {Object} $customPageDocument
  * @param {SelectorConfig} config
- * @param {Boolean} isCalledByRunner
+ * @param {Boolean} [isCalledByRunner]
  * @return {Object}
  */
 function produceSelectorFn($element, $customPageDocument, config, isCalledByRunner) {
