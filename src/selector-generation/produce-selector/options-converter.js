@@ -24,7 +24,7 @@ export const configToOptions = selectorConfig => ({
 /**
  * Decides if ids should be used in selector generation
  * @param {SelectorConfig} selectorConfig
- * @param {string} attributeName this is not used by us in this case is alwatys equal with 'id' string from "[id='idName']"
+ * @param {string} attributeName this is not used by us in this case is always equal with 'id' string from "[id='idName']"
  * @param {string} attributeValue this is the idName
  * @return {boolean}
  */
@@ -50,7 +50,7 @@ function ignoreIdFn(selectorConfig, attributeName, attributeValue) {
 /**
  * Decides if classes should be used in selector generation
  * @param {SelectorConfig} selectorConfig
- * @param {string} attributeName this is not used by us in this case is alwatys equal with 'class' string from "[class='className']"
+ * @param {string} attributeName this is not used by us in this case is always equal with 'class' string from "[class='className']"
  * @param {string} attributeValue this is the className
  * @return {boolean}
  */

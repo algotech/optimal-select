@@ -160,7 +160,8 @@ function findAttributesPattern (priority, element, ignore, exclude) {
 
     var pattern = `[${attributeName}="${attributeValue}"]`
 
-    // this if is here commented because we have a better validation for this cases.
+    // this if is commented because we have a better validation for this cases.
+    // this should solve the optimisation/ignore issues for class names that were left as [class="all classes here"]
     // if ((/\b\d/).test(attributeValue) === false) {
     if (attributeName === 'id') {
       pattern = `#${attributeValue}`
