@@ -153,26 +153,30 @@ function findAttributesPattern (priority, element, ignore, exclude) {
 
     const currentIgnore = ignore[attributeName] || ignore.attribute
     const currentDefaultIgnore = defaultIgnore[attributeName] || defaultIgnore.attribute
+
     if (checkIgnore(currentIgnore, attributeName, attributeValue, currentDefaultIgnore)) {
       continue
     }
 
     var pattern = `[${attributeName}="${attributeValue}"]`
 
-    if ((/\b\d/).test(attributeValue) === false) {
-      if (attributeName === 'id') {
-        pattern = `#${attributeValue}`
-      }
-
-      if (attributeName === 'class') {
-        let classNameAfterExclusion = excludeClassNameParts(attributeValue, exclude.className);
-        classNameAfterExclusion = classNameAfterExclusion.trim().replace(/\s+/g, '.');
-        pattern = classNameAfterExclusion.length ? `.${classNameAfterExclusion}` : null;
-      }
+    // this if is commented because we have a better validation for this cases.
+    // this should solve the optimisation/ignore issues for class names that were left as [class="all classes here"]
+    // if ((/\b\d/).test(attributeValue) === false) {
+    if (attributeName === 'id') {
+      pattern = `#${attributeValue}`
     }
+
+    if (attributeName === 'class') {
+      let classNameAfterExclusion = excludeClassNameParts(attributeValue, exclude.className);
+      classNameAfterExclusion = classNameAfterExclusion.trim().replace(/\s+/g, '.');
+      pattern = classNameAfterExclusion.length ? `.${classNameAfterExclusion}` : null;
+    }
+    // }
 
     return pattern
   }
+
   return null
 }
 /**

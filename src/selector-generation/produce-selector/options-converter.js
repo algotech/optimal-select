@@ -24,19 +24,19 @@ export const configToOptions = selectorConfig => ({
 /**
  * Decides if ids should be used in selector generation
  * @param {SelectorConfig} selectorConfig
- * @param {string} a
- * @param {string} idName
+ * @param {string} attributeName this is not used by us in this case is always equal with 'id' string from "[id='idName']"
+ * @param {string} attributeValue this is the idName
  * @return {boolean}
  */
-function ignoreIdFn(selectorConfig, a, idName) {
+function ignoreIdFn(selectorConfig, attributeName, attributeValue) {
   if (selectorConfig.isAllowIds()) {
-    if (isSelectorRandomlyGenerated(idName) && selectorConfig.isExcludingRandomSelectors()) {
+    if (isSelectorRandomlyGenerated(attributeValue) && selectorConfig.isExcludingRandomSelectors()) {
       return true;
     }
     const forbiddenSubstrings = selectorConfig.getForbiddenIdSubstrings();
 
     for (let i = 0; i < forbiddenSubstrings.length; i++) {
-      if (idName.includes(forbiddenSubstrings[i])) {
+      if (attributeValue.includes(forbiddenSubstrings[i])) {
         return true; // ignore id name with forbidden substring
       }
     }
@@ -50,12 +50,12 @@ function ignoreIdFn(selectorConfig, a, idName) {
 /**
  * Decides if classes should be used in selector generation
  * @param {SelectorConfig} selectorConfig
- * @param {string} a
- * @param {string} className
+ * @param {string} attributeName this is not used by us in this case is always equal with 'class' string from "[class='className']"
+ * @param {string} attributeValue this is the className
  * @return {boolean}
  */
-function ignoreClassFn(selectorConfig, a, className) {
-  if (className && selectorConfig.isAllowClasses()) {
+function ignoreClassFn(selectorConfig, attributeName, attributeValue) {
+  if (attributeValue && selectorConfig.isAllowClasses()) {
     return false; // allow all classes
   }
 
@@ -65,11 +65,11 @@ function ignoreClassFn(selectorConfig, a, className) {
 /**
  * Decides if tags should be used in selector generation
  * @param {SelectorConfig} selectorConfig
- * @param {string} a
+ * @param {string} nullParameter this is not used by us and it's null all the time here
  * @param {string} tagName
  * @return {boolean}
  */
-function ignoreTagFn(selectorConfig, a, tagName) {
+function ignoreTagFn(selectorConfig, nullParameter, tagName) {
   if (selectorConfig.isAllowTags()) {
     return false; // allow all tags
   }
@@ -119,10 +119,11 @@ function ignoreAttributeFn(
  * Decides if a className should be excluded
  * @param {SelectorConfig} selectorConfig
  * @param {string} className
+ *
  * @return {boolean}
  */
 function excludeClassFn(selectorConfig, className) {
-  if (className.length > 30) {
+  if (className && className.length > 30) {
     return true; // ignore long classes
   }
 
