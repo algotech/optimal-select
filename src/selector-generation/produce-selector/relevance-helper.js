@@ -16,7 +16,7 @@ export function isSelectorRandomlyGenerated(selector) {
   var vowel = '[aeiouy]';
   var cccVcc = new RegExp(`.*${noVowel}${noVowel}${noVowel}${vowel}${noVowel}${noVowel}.*`, 'i');
   var ccVccc = new RegExp(`.*${noVowel}${noVowel}${vowel}${noVowel}${noVowel}${noVowel}.*`, 'i');
-  var fourConsecutiveVovels = new RegExp(`.*${vowel}${vowel}${vowel}${vowel}.*`, 'i');
+  var fourConsecutiveVovels = new RegExp(`.*${noVowel}${noVowel}${noVowel}${noVowel}.*`, 'i');
 
   var randomLiteral = !!selector.match(cccVcc) || !!selector.match(ccVccc) || !!selector.match(fourConsecutiveVovels);
 
