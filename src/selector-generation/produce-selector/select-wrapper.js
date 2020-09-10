@@ -1,4 +1,3 @@
-import $ from 'jquery'
 import { getSingleSelector } from '../../select';
 
 import SelectorConfiguration from '../selector-configuration';
@@ -16,25 +15,23 @@ let defaultSelectorConfig = new SelectorConfiguration(
 
 /**
  * Creates a selector for the provided element with the specifiec config
- * @param {JQuery} $element The element to create a selector for or {Element} if isCalledByRunner
+ * @param {Element} element The element to create a selector for
  * @param {Object} [customPageDocument]
  * @param {SelectorConfig} [config]
  * @param {Function} [selectStrategy]
- * @param {Boolean} [isCalledByRunner]
  * @return {Object}
  */
 function select(
-  $element,
+  element,
   customPageDocument,
   config,
-  selectStrategy,
-  isCalledByRunner
+  selectStrategy
 ) {
   config = config || defaultSelectorConfig;
   selectStrategy = selectStrategy || getSingleSelector;
 
   let selector = {
-    $target: $element,
+    $target: element,
     success: true,
     hasError: false,
     hasWarning: false,
@@ -52,17 +49,13 @@ function select(
     }
 
     // produce the selector
-    let untestedSelector = isCalledByRunner ?
-      selectStrategy($element, options) :
-      selectStrategy($element[0], options);
+    let untestedSelector = selectStrategy(element, options);
     // test the selector
-    let isValid = isCalledByRunner ?
-      options.root.querySelector(untestedSelector) === $element :
-      $(options.root).find(untestedSelector).is($element);
+    let isValid = options.root.querySelector(untestedSelector) === element;
 
     if (isValid) {
       const shorterSelector = shortenSelectorByShifting(
-        untestedSelector, options.root, $element, isCalledByRunner
+        untestedSelector, options.root, element
       );
 
       selector.value = shorterSelector || untestedSelector;
@@ -70,7 +63,7 @@ function select(
       addErrorMessage(selector, ERRORS.VALIDATION_FAILED, {
         invalidatedSelector: untestedSelector,
         configComposition: config.getComposition(),
-        expectedElement: $element[0] || $element,
+        expectedElement: element,
         strategy: selectStrategy
       });
     }
