@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import getQuerySelector, { getSingleSelector } from '../../select';
 
 import SelectorConfig from '../selector-configuration';
@@ -12,22 +11,21 @@ const defaultSelectorConfig = new SelectorConfig(
 /**
  * Produces the selector and uses fallbacks in case the current config
  * is too restrictive for the current element
- * @param {JQuery} $element  {Jquery} or {Element} if isCalledByRunner is true
- * @param {Object} $customPageDocument
+ * @param {Element} element
+ * @param {Object} customPageDocument
  * @param {SelectorConfig} config
- * @param {Boolean} [isCalledByRunner]
  * @return {Object}
  */
-function produceSelectorFn($element, $customPageDocument, config, isCalledByRunner) {
+function produceSelectorFn(element, customPageDocument, config) {
   // try with the specified config and default strategy
-  let sel1 = select($element, $customPageDocument, config, getQuerySelector, isCalledByRunner);
+  let sel1 = select(element, customPageDocument, config, getQuerySelector);
 
   if (!sel1.hasError) {
     return sel1;
   }
 
   // try with the fallback config and default strategy
-  let sel2 = select($element, $customPageDocument, null, getQuerySelector, isCalledByRunner);
+  let sel2 = select(element, customPageDocument, null, getQuerySelector);
 
   if (!defaultSelectorConfig.isIncludedInConfig(config)) {
     addWarningMessage(sel2, WARNINGS.FELL_TO_DEFAULT_CONFIG);
@@ -38,7 +36,7 @@ function produceSelectorFn($element, $customPageDocument, config, isCalledByRunn
   }
 
   // try with the specified config and the fallback strategy
-  let sel3 = select($element, $customPageDocument, config, getSingleSelector, isCalledByRunner);
+  let sel3 = select(element, customPageDocument, config, getSingleSelector);
 
   addWarningMessage(sel3, WARNINGS.FELL_TO_DEFAULT_STRATEGY);
 
@@ -47,7 +45,7 @@ function produceSelectorFn($element, $customPageDocument, config, isCalledByRunn
   }
 
   // try with the fallback config and the fallback strategy
-  let sel4 = select($element, $customPageDocument, null, getSingleSelector, isCalledByRunner);
+  let sel4 = select(element, customPageDocument, null, getSingleSelector);
 
   if (!defaultSelectorConfig.isIncludedInConfig(config)) {
     addWarningMessage(sel4, WARNINGS.FELL_TO_DEFAULT_CONFIG);
@@ -73,7 +71,7 @@ function produceSelectorFn($element, $customPageDocument, config, isCalledByRunn
   };
   let configTagsOnly = new SelectorConfig(config.name, tagsOnlyComposition);
   let sel5 =
-    select($element, $customPageDocument, configTagsOnly, getQuerySelector, isCalledByRunner);
+    select(element, customPageDocument, configTagsOnly, getQuerySelector);
 
   if (!configTagsOnly.isIncludedInConfig(config)) {
     addWarningMessage(sel5, WARNINGS.FELL_TO_DEFAULT_CONFIG);
@@ -97,8 +95,8 @@ function logAllInvalidSelectorsError(sel1, sel2, sel3, sel4, sel5) {
   console.error('[optimal-select-log] tagsOnlyComposition + defaultStrategy', sel5);
 }
 
-function produceSelectorFnWrapper($element, $customPageDocument, config, isCalledByRunner = false) {
-  let selector = produceSelectorFn($element, $customPageDocument, config, isCalledByRunner);
+function produceSelectorFnWrapper(element, customPageDocument, config) {
+  let selector = produceSelectorFn(element, customPageDocument, config);
 
   if (selector == null) {
     return console.error('[optimal-select-log] Selector is null!');
@@ -125,7 +123,7 @@ function produceSelectorFnWrapper($element, $customPageDocument, config, isCalle
 export function getSelector(element, config) {
   const selectorConfig = new SelectorConfig('Global Selector Config', config);
 
-  return produceSelectorFnWrapper(element, window.document, selectorConfig, true);
+  return produceSelectorFnWrapper(element, window.document, selectorConfig);
 }
 
 export const produceSelector = produceSelectorFnWrapper;
