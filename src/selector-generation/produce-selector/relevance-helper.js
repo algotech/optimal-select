@@ -12,7 +12,9 @@ export function isSelectorRandomlyGenerated(selector) {
   // check this options
   // - minimul 5 consonants in 6 consecutive characters (2c-1v-3c or 3c-1v-2c)
   // - minimum 4 consecutive consonants
-  var noVowel = '[^aeiouy]';
+  // due to some issues with select2 library the selector .select2-search--dropdown .select2-search__field
+  // is marked as random.
+  var noVowel = '[^aeiouy_-]';
   var vowel = '[aeiouy]';
   var cccVcc = new RegExp(`.*${noVowel}${noVowel}${noVowel}${vowel}${noVowel}${noVowel}.*`, 'i');
   var ccVccc = new RegExp(`.*${noVowel}${noVowel}${vowel}${noVowel}${noVowel}${noVowel}.*`, 'i');
