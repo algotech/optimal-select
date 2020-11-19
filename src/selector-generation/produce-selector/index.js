@@ -120,14 +120,15 @@ function produceSelectorFnWrapper(element, customPageDocument, config) {
 * @return {Object}                  The generated selector string can be found by the .value
 *                                   attribute of this result object.
 */
-export function getSelector(element, config) {
+export function getSelector(element, config, customPageDocument) {
   const selectorConfig = new SelectorConfig('Global Selector Config', config);
 
-  return produceSelectorFnWrapper(element, window.document, selectorConfig);
+  return produceSelectorFn(element, customPageDocument || window.document, selectorConfig);
 }
 
 export const produceSelector = produceSelectorFnWrapper;
 
 export default {
-  produceSelector: produceSelectorFnWrapper
+  produceSelector: produceSelectorFnWrapper,
+  getSelector,
 };
