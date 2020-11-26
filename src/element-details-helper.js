@@ -14,6 +14,18 @@ var attachElementDetailsToGlobal = (returnConstructElementDetails = false) => {
     return attributeDetails;
   };
 
+  var getVisualDetails = function (element) {
+    var visualDetails = element.getBoundingClientRect();
+    const x = visualDetails.x;
+    const y = visualDetails.y;
+    const width = visualDetails.width;
+    const height = visualDetails.height;
+
+    return {
+      x: x, y: y, width: width, height: height,
+    };
+  };
+
   var constructParentsArray = function (element) {
     var parentArray = [];
     var index = 0;
@@ -64,6 +76,7 @@ var attachElementDetailsToGlobal = (returnConstructElementDetails = false) => {
     if (testLineItemId) {
       elementDetails.testLineItemId = testLineItemId;
     }
+    elementDetails.visualDetails = getVisualDetails(domElement),
     elementDetails.selector = selector;
     elementDetails.nextSibling = domElement.nextElementSibling ? getDirectDetails(domElement.nextElementSibling) : null;
     elementDetails.previousSibling = domElement.previousElementSibling ? getDirectDetails(domElement.previousElementSibling) : null;
