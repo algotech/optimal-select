@@ -15,9 +15,23 @@ var attachElementDetailsToGlobal = (returnConstructElementDetails = false) => {
   };
 
   var getVisualDetails = function (element) {
+    var scrollTop = window.pageYOffset ||
+      (
+        document.documentElement ||
+        document.body.parentNode ||
+        document.body
+      ).scrollTop;
+
+    var scrollLeft = window.pageXOffset ||
+      (
+        document.documentElement ||
+        document.body.parentNode ||
+        document.body
+      ).scrollLeft;
+
     var visualDetails = element.getBoundingClientRect();
-    const x = visualDetails.x;
-    const y = visualDetails.y;
+    const x = scrollLeft + visualDetails.x;
+    const y = scrollTop + visualDetails.y;
     const width = visualDetails.width;
     const height = visualDetails.height;
 
