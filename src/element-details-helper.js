@@ -14,6 +14,14 @@ var attachElementDetailsToGlobal = (returnConstructElementDetails = false) => {
     return attributeDetails;
   };
 
+  var roundToOneDecimal = function (number) {
+    if (typeof number === 'string') {
+      return number;
+    }
+
+    return Math.round(number * 10) / 10;
+  };
+
   var getVisualDetails = function (element) {
     var scrollTop = window.pageYOffset ||
       (
@@ -30,10 +38,10 @@ var attachElementDetailsToGlobal = (returnConstructElementDetails = false) => {
       ).scrollLeft;
 
     var visualDetails = element.getBoundingClientRect();
-    const x = scrollLeft + visualDetails.x;
-    const y = scrollTop + visualDetails.y;
-    const width = visualDetails.width;
-    const height = visualDetails.height;
+    const x = roundToOneDecimal(scrollLeft + visualDetails.x);
+    const y = roundToOneDecimal(scrollTop + visualDetails.y);
+    const width = roundToOneDecimal(visualDetails.width);
+    const height = roundToOneDecimal(visualDetails.height);
 
     return {
       x: x, y: y, width: width, height: height,
