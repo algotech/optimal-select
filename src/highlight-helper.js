@@ -1,5 +1,11 @@
 const attachComputeOverlayStylesToGlobal = (returnOnlyComputeOverlayStyles = false) => {
-  function computeOverlayStyles(target, borderWidth, returnOnlyCoords = false) {
+  function computeOverlayStyles(
+    target,
+    borderWidth,
+    widthHeightFactor = 1,
+    leftTopFactor = 1,
+    returnOnlyCoords = false
+  ) {
     function elementExistsInDOM(element) {
       return document.body.contains(element);
     }
@@ -110,10 +116,26 @@ const attachComputeOverlayStylesToGlobal = (returnOnlyComputeOverlayStyles = fal
 
     const coordinates = {
       position: parentWithPositionFixed ? 'fixed' : 'absolute',
-      width: (biggerPseudo && biggerPseudo.width || outerWidth) + borderWidth,
-      height: (biggerPseudo && biggerPseudo.height || outerHeight) + borderWidth,
-      left: (boundingClientRect.left + (parentWithPositionFixed ? 0 : scrollLeft)) - borderWidth - htmlMarginLeft,
-      top: (boundingClientRect.top + (parentWithPositionFixed ? 0 : scrollTop)) - borderWidth - htmlMarginTop,
+      width: (
+        biggerPseudo && biggerPseudo.width || outerWidth
+      ) + (
+        widthHeightFactor * borderWidth
+      ),
+      height: (
+        biggerPseudo && biggerPseudo.height || outerHeight
+      ) + (
+        widthHeightFactor * borderWidth
+      ),
+      left: (
+        boundingClientRect.left + (parentWithPositionFixed ? 0 : scrollLeft)
+      ) - (
+        leftTopFactor * borderWidth
+      ) - htmlMarginLeft,
+      top: (
+        boundingClientRect.top + (parentWithPositionFixed ? 0 : scrollTop)
+      ) - (
+        leftTopFactor * borderWidth
+      ) - htmlMarginTop,
     };
 
     const styling = {
